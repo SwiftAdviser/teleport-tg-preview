@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>tgBTC - Bitcoin DeFi on TON</title>
+    <meta name="description" content="Access Bitcoin DeFi on TON directly from your Telegram with tgBTC and TON Teleport">
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+            background-color: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #starfield {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+        #logo-container {
+            width: 240px;
+            height: 240px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        #logo {
+            width: 200px;
+            height: 200px;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        #logo:hover {
+            transform: scale(1.05);
+        }
+        #logo:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+    <canvas id="starfield"></canvas>
+    <div id="logo-container">
+        <img id="logo" src="./logo.png" alt="TON Teleport Logo">
+    </div>
+
+    <script>
+        const canvas = document.getElementById('starfield');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const stars = [];
+        for (let i = 0; i < 200; i++) {
+            stars.push({
+                x: Math.random() * canvas.width - canvas.width / 2,
+                y: Math.random() * canvas.height - canvas.height / 2,
+                z: Math.random() * canvas.width,
+                o: 0.7 + Math.random() * 0.3
+            });
+        }
+
+        function drawStars() {
+            ctx.fillStyle = "#000";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            stars.forEach(star => {
+                const x = star.x / star.z * canvas.width + canvas.width / 2;
+                const y = star.y / star.z * canvas.height + canvas.height / 2;
+                const size = (1 - star.z / canvas.width) * 2;
+                const opacity = star.o;
+                
+                ctx.beginPath();
+                ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
+                ctx.arc(x, y, size, 0, 2 * Math.PI);
+                ctx.fill();
+                
+                star.z -= 0.2;
+                if (star.z <= 0) {
+                    star.z = canvas.width;
+                    star.x = Math.random() * canvas.width - canvas.width / 2;
+                    star.y = Math.random() * canvas.height - canvas.height / 2;
+                }
+            });
+        }
+
+        function animate() {
+            drawStars();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        document.getElementById('logo').addEventListener('click', function() {
+            // Add your click event logic here
+            console.log('Logo clicked!');
+        });
+    </script>
+</body>
+</html>
