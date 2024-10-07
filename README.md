@@ -1,1 +1,1 @@
-# teleport-tg-preview
+# TON Teleport preview
